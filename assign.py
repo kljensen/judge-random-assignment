@@ -13,17 +13,18 @@ for team_no in range(num_teams):
     reviewers = set()
     i = 0
     while len(reviewers) < coverage:
+        i = i % num_reviewers
         reviewer = randomized_reviewers[i]
-        if len(assignments[reviewer]) == min_num_reviews:
-            min_num_reviews = min(len(a) for a in assignments)
+        num_reviews_for_reviewer = len(assignments[reviewer])
+        if num_reviews_for_reviewer == min_num_reviews:
             reviewers.add(reviewer)
+            assignments[reviewer].add(team_no)
+            min_num_reviews = min(len(a) for a in assignments)
         i += 1
     
-    reviewers_csv = ",".join(str(r) for r in reviewers)
+    reviewers_csv = ",".join(str(r) for r in sorted(reviewers))
     print(f'team{team_no},{reviewers_csv}')
-    for reviewer in reviewers:
-        assignments[reviewer].add(team_no)
 
 for i, a in enumerate(assignments):
-    team_csv = ",".join(str(t) for t in a)
+    team_csv = ",".join(str(t) for t in sorted(a))
     print(f'judge{i},{team_csv}')
